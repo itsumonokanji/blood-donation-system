@@ -12,8 +12,8 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const result = await sql`
-    INSERT INTO donors (name, blood_group)
-    VALUES (${body.name}, ${body.blood_group})
+    INSERT INTO donors (name, blood_group, location)  -- ✅ ДОБАВИЛ
+    VALUES (${body.name}, ${body.blood_group}, ${body.location})  -- ✅ ДОБАВИЛ
     RETURNING *
   `;
 
@@ -38,7 +38,8 @@ export async function PUT(req: Request) {
   const result = await sql`
     UPDATE donors
     SET name = ${body.name},
-        blood_group = ${body.blood_group}
+        blood_group = ${body.blood_group},
+        location = ${body.location}  -- ✅ ДОБАВИЛ
     WHERE id = ${body.id}
     RETURNING *
   `;
