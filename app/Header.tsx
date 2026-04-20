@@ -1,16 +1,19 @@
-"use client"; // Это позволяет нам менять язык по клику
+"use client";
 
 import Link from "next/link";
 import { useLanguage } from "@/app/LanguageContext";
+import { useTheme } from "@/app/ThemeContext"; // Импортируем тему
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme(); // Достаем переменные темы
 
   return (
     <header style={{ 
       padding: "15px 40px", 
-      background: "white", 
-      borderBottom: "1px solid #e5e7eb",
+      // Вместо white используем переменную из CSS
+      background: "var(--background)", 
+      borderBottom: "1px solid var(--border)",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center"
@@ -20,9 +23,25 @@ export default function Header() {
       </Link>
       
       <nav style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-        <Link href="/donor" style={{ textDecoration: "none", color: "#4b5563", fontWeight: 500 }}>{t.donor}</Link>
-        <Link href="/hospital" style={{ textDecoration: "none", color: "#4b5563", fontWeight: 500 }}>{t.hospital}</Link>
-        <Link href="/admin" style={{ textDecoration: "none", color: "#4b5563", fontWeight: 500 }}>{t.admin}</Link>
+        <Link href="/donor" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.donor}</Link>
+        <Link href="/hospital" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.hospital}</Link>
+        <Link href="/admin" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.admin}</Link>
+
+        {/* КНОПКА ТЕМЫ */}
+        <button 
+          onClick={toggleTheme} 
+          style={{ 
+            fontSize: "1.2rem", 
+            cursor: "pointer", 
+            background: "none", 
+            border: "none",
+            marginLeft: "10px",
+            display: "flex",
+            alignItems: "center"
+          }}
+        >
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
 
         {/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */}
         <select 
@@ -31,7 +50,9 @@ export default function Header() {
           style={{ 
             padding: "5px 10px", 
             borderRadius: "6px", 
-            border: "1px solid #cbd5e1",
+            border: "1px solid var(--border)",
+            background: "var(--background)",
+            color: "var(--foreground)",
             cursor: "pointer",
             marginLeft: "10px"
           }}

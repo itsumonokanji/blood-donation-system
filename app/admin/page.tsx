@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Donor, Hospital, BloodRequest } from "@/types";
 import Stats from "@/components/ui/Stats";
-import { useLanguage } from "../LanguageContext"; // Импорт контекста
+import { useLanguage } from "../LanguageContext"; 
 
 interface Toast {
   id: number;
@@ -12,30 +12,24 @@ interface Toast {
 }
 
 export default function Home() {
-  const { t } = useLanguage(); // Подключаем переводы
+  const { t, lang } = useLanguage();
 
-  // --- СОСТОЯНИЕ (State) ---
   const [donors, setDonors] = useState<Donor[]>([]);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [requests, setRequests] = useState<BloodRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingHospitalId, setEditingHospitalId] = useState<number | null>(null);
-
   const [matchedDonors, setMatchedDonors] = useState<{ requestId: number, list: Donor[] } | null>(null);
-
   const [form, setForm] = useState({ name: "", blood_group: "", location: "" });
   const [hospitalForm, setHospitalForm] = useState({ name: "", location: "", contact: "" });
   const [requestForm, setRequestForm] = useState({ hospital: "", blood_group: "" });
-
   const [editingId, setEditingId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [bloodFilter, setBloodFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
-
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [queue, setQueue] = useState<Toast[]>([]);
 
-  // --- ЛОГИКА УВЕДОМЛЕНИЙ ---
   function showToast(message: string, type: Toast["type"] = "success") {
     const id = Date.now() + Math.random();
     setQueue((prev) => [...prev, { id, message, type }]);
@@ -52,7 +46,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [queue, toasts]);
 
-  // --- ЗАПРОСЫ К API ---
   const loadDonors = async () => {
     const res = await fetch("/api/donors");
     if (res.ok) setDonors(await res.json());
@@ -74,15 +67,13 @@ export default function Home() {
         setLoading(true);
         await Promise.all([loadDonors(), loadHospitals(), loadRequests()]);
       } catch (err) {
-        showToast("Server error", "error");
+        showToast(t.msgError, "error");
       } finally {
         setLoading(false);
       }
     };
     fetchAllData();
   }, []);
-
-  // --- ОБРАБОТЧИКИ (Handlers) ---
 
   function findDonorsForRequest(requestId: number, bloodGroup: string) {
     if (matchedDonors?.requestId === requestId) {
@@ -92,10 +83,8 @@ export default function Home() {
     const matches = donors.filter(d => d.blood_group === bloodGroup);
     setMatchedDonors({ requestId, list: matches });
     if (matches.length === 0) {
-      // Используем перевод для группы крови и сообщения "Не найдено"
       showToast(`${t.bloodGroup} ${bloodGroup} - ${t.msgError}`, "warning");
     } else {
-      // Используем ключ совместимости или просто сообщение об успехе
       showToast(`${t.compatibility} ${matches.length}`, "success");
     }
   }
@@ -135,43 +124,6 @@ export default function Home() {
     }
   }
 
-  async function handleHospitalSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const method = editingHospitalId ? "PUT" : "POST";
-    const body = editingHospitalId ? { id: editingHospitalId, ...hospitalForm } : hospitalForm;
-    try {
-      const res = await fetch("/api/hospitals", {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) throw new Error();
-      setEditingHospitalId(null);
-      setHospitalForm({ name: "", location: "", contact: "" });
-      await loadHospitals();
-      showToast(t.msgSuccess, "success");
-    } catch {
-      showToast(t.msgError, "error");
-    }
-  }
-
-  async function addRequest(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      const res = await fetch("/api/requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestForm),
-      });
-      if (!res.ok) throw new Error();
-      setRequestForm({ hospital: "", blood_group: "" });
-      await loadRequests();
-      showToast(t.msgSuccess, "success");
-    } catch {
-      showToast(t.msgError, "error");
-    }
-  }
-
   async function completeRequest(id: number) {
     try {
       const res = await fetch("/api/requests", {
@@ -181,17 +133,16 @@ export default function Home() {
       });
       if (!res.ok) throw new Error();
       await loadRequests();
-      showToast(t.btnClose, "success");
+      showToast(t.msgSuccess, "success");
     } catch {
       showToast(t.msgError, "error");
     }
   }
 
-  if (loading) return <div className="loader">Loading...</div>;
+  if (loading) return <div className="loader">...</div>;
 
   return (
     <div className="page-container">
-      {/* УВЕДОМЛЕНИЯ (Toasts) */}
       <div className="toast-wrapper">
         {toasts.map((toast) => (
           <div key={toast.id} className={`toast ${toast.type}`}>
@@ -201,30 +152,63 @@ export default function Home() {
       </div>
 
       <style jsx>{`
-        .page-container { padding: 40px; font-family: 'Segoe UI', sans-serif; max-width: 1200px; margin: 0 auto; }
+        .page-container { 
+          padding: 40px; 
+          max-width: 1200px; 
+          margin: 0 auto; 
+          background: var(--background); 
+          color: var(--foreground);
+        }
         .toast-wrapper { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
         .toast { padding: 12px 20px; border-radius: 8px; color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease; }
         .success { background: #10b981; }
         .error { background: #ef4444; }
         .warning { background: #f59e0b; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        .loader { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.2rem; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-        th { background: #f8f9fa; font-weight: 600; }
-        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        
+        .loader { display: flex; justify-content: center; align-items: center; height: 100vh; color: var(--foreground); }
+        
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          margin-bottom: 40px; 
+          background: var(--card); 
+          border-radius: 8px; 
+          overflow: hidden; 
+          color: var(--card-foreground);
+          border: 1px solid var(--border);
+        }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--muted); font-weight: 600; }
+        
+        input, select { 
+          padding: 10px; 
+          border: 1px solid var(--border); 
+          border-radius: 6px; 
+          font-size: 14px; 
+          background: var(--background); 
+          color: var(--foreground); 
+        }
+        
         button { padding: 10px 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: 500; transition: opacity 0.2s; }
         .btn-primary { background: #2563eb; color: white; }
         .btn-delete { background: #fee2e2; color: #dc2626; }
         .btn-edit { background: #fef3c7; color: #d97706; }
-        .filter-section { display: flex; gap: 15px; margin-bottom: 30px; background: #f3f4f6; padding: 20px; border-radius: 10px; }
-        .match-row { background: #f0f7ff; border-left: 4px solid #2563eb; }
+        
+        .filter-section { 
+          display: flex; 
+          gap: 15px; 
+          margin-bottom: 30px; 
+          background: var(--muted); 
+          padding: 20px; 
+          border-radius: 10px; 
+        }
+        .match-row { background: var(--accent); color: var(--accent-foreground); }
       `}</style>
 
       <h1>🩸 {t.adminTitle}</h1>
       <Stats donors={donors} requests={requests} />
 
-      {/* ФИЛЬТРЫ */}
       <div className="filter-section">
         <input
           type="text"
@@ -237,11 +221,9 @@ export default function Home() {
         <input placeholder={t.location + "..."} value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} />
       </div>
 
-      {/* ДОНОРЫ */}
       <section>
         <h2>🧑‍🤝‍🧑 {t.adminDonors}</h2>
         <form onSubmit={handleDonorSubmit} style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-          {/* Заменили Name на t.colName */}
           <input 
             placeholder={t.colName} 
             value={form.name} 
@@ -253,14 +235,12 @@ export default function Home() {
           </select>
           <input placeholder={t.location} value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           
-          {/* Заменили Update на динамический перевод */}
           <button type="submit" className="btn-primary">
             {editingId ? t.statusDone : t.btnReg}
           </button>
           
-          {/* Заменили Cancel на t.btnClose */}
           {editingId && (
-            <button type="button" onClick={() => setEditingId(null)}>
+            <button type="button" onClick={() => setEditingId(null)} style={{ background: "var(--muted)", color: "var(--foreground)" }}>
               {t.btnClose}
             </button>
           )}
@@ -269,7 +249,6 @@ export default function Home() {
         <table>
           <thead>
             <tr>
-              {/* Заменили ID и Name в заголовках */}
               <th>{t.colId}</th>
               <th>{t.colName}</th>
               <th>{t.bloodGroup}</th>
@@ -288,17 +267,17 @@ export default function Home() {
                   <td>{d.blood_group}</td>
                   <td>{d.location || "—"}</td>
                   <td>
-                    <button className="btn-delete" onClick={() => deleteDonor(d.id!)}>
-                      {t.btnDelete}
-                    </button>
-                    {/* Кнопку Edit обычно заменяют на иконку или t.statusPending (если нет ключа Edit) 
-                        Давай пока поставим t.tableAction или просто оставим как есть, если в словаре нет ключа "Изменить" */}
-                    <button className="btn-edit" onClick={() => { 
-                      setEditingId(d.id!); 
-                      setForm({ name: d.name, blood_group: d.blood_group, location: d.location || "" }); 
-                    }}>
-                      {t.colName === "Имя" ? "Ред." : "Edit"} 
-                    </button>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button className="btn-delete" onClick={() => deleteDonor(d.id!)}>
+                        {t.btnDelete}
+                      </button>
+                      <button className="btn-edit" onClick={() => { 
+                        setEditingId(d.id!); 
+                        setForm({ name: d.name, blood_group: d.blood_group, location: d.location || "" }); 
+                      }}>
+                        {lang === 'ru' ? "Ред." : "Edit"}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -306,13 +285,11 @@ export default function Home() {
         </table>
       </section>
 
-      {/* ЗАЯВКИ */}
       <section>
         <h2>🩸 {t.adminRequests}</h2>
         <table>
           <thead>
             <tr>
-              {/* Заменили Hospital и Status */}
               <th>{t.colHospital}</th>
               <th>{t.bloodGroup}</th>
               <th>{t.colStatus}</th>
@@ -325,7 +302,6 @@ export default function Home() {
                 <tr>
                   <td>{r.hospital}</td>
                   <td><strong>{r.blood_group}</strong></td>
-                  {/* Теперь статусы Done и Pending берутся из словаря */}
                   <td>
                     {r.status === "done" 
                       ? `✅ ${t.statusDone}` 
@@ -359,7 +335,6 @@ export default function Home() {
                             ))}
                           </ul>
                         ) : (
-                          /* Заменили No matches на сообщение об ошибке/отсутствии */
                           <p>{t.msgError}</p> 
                         )}
                       </div>

@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { BloodRequest as Request } from "@/types";
-import { useLanguage } from "../LanguageContext"; // Подключаем наш контекст
+import { useLanguage } from "../LanguageContext"; 
 
 export default function HospitalPage() {
-  const { t } = useLanguage(); // Достаем объект с переводами
+  const { t } = useLanguage(); 
   const [bloodGroup, setBloodGroup] = useState("");
   const [location, setLocation] = useState("");
   const [requests, setRequests] = useState<Request[]>([]);
@@ -24,17 +24,17 @@ export default function HospitalPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
-        hospital_name: "City Hospital", // Можно позже тоже сделать динамическим
+        hospital_name: "City Hospital", 
         blood_group: bloodGroup, 
         location 
       }),
     });
 
     if (res.ok) {
-      // Обновляем список после успешной отправки
+      
       const updated = await fetch("/api/requests").then((r) => r.json());
       setRequests(updated);
-      // Очищаем форму
+      
       setBloodGroup("");
       setLocation("");
     }

@@ -1,7 +1,7 @@
-"use client"; // Обязательно, так как используем контекст (хуки)
+"use client"; 
 
 import { Donor, BloodRequest } from "../../types";
-import { useLanguage } from "../../app/LanguageContext"; // 1. Импортируем хук (проверь путь!)
+import { useLanguage } from "../../app/LanguageContext"; 
 
 interface StatsProps {
   donors: Donor[];
@@ -9,11 +9,10 @@ interface StatsProps {
 }
 
 export default function Stats({ donors, requests }: StatsProps) {
-  const { t } = useLanguage(); // 2. Достаем объект с переводами
+  const { t } = useLanguage(); 
 
   const totalDonors = donors.length;
-  // Обрати внимание: в типах у тебя "pending", а на странице больницы мы писали "open". 
-  // Если статистика показывает 0, проверь, какой статус реально прилетает из базы.
+  
   const pendingRequests = requests.filter(r => r.status === "pending" || r.status === "open").length;
   const completedRequests = requests.filter(r => r.status === "done").length;
 
@@ -21,7 +20,7 @@ export default function Stats({ donors, requests }: StatsProps) {
     <div className="stats-container">
       <div className="stat-card">
         <h3>{totalDonors}</h3>
-        {/* 3. Заменяем текст на ключи из словаря */}
+        
         <p>{t.statsTotal}</p>
       </div>
       
@@ -32,8 +31,7 @@ export default function Stats({ donors, requests }: StatsProps) {
       
       <div className="stat-card">
         <h3>{completedRequests}</h3>
-        {/* Если в LanguageContext еще нет ключа statsSaved, можно временно оставить t.history 
-            или добавить новый ключ statsSaved в словарь */}
+        
         <p>{t.statsSaved || "Saved Lives"}</p>
       </div>
 

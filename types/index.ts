@@ -19,8 +19,8 @@ export interface Hospital {
 
 export interface BloodRequest {
   id: number;
-  hospital: string;      // <-- Убедись, что написано именно hospital
+  hospital: string;      
   blood_group: string;
   status: "pending" | "done" | "open" | "closed";
-  location?: string;     // Необязательно, но полезно
+  location?: string;    
 }

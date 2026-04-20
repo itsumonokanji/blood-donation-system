@@ -21,7 +21,7 @@ export default function DonorPage() {
     });
     if (res.ok) {
       setIsRegistered(true);
-      // Сразу подгружаем профиль после регистрации
+      
       checkProfile(name);
     }
   };

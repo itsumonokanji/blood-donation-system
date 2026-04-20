@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useLanguage } from "./LanguageContext"; // Подключаем рацию
+import { useLanguage } from "./LanguageContext"; 
 
 export default function LandingPage() {
-  const { t } = useLanguage(); // Достаем переводы
+  const { t } = useLanguage(); 
 
   return (
     <div style={{ 
@@ -13,12 +13,12 @@ export default function LandingPage() {
       background: "linear-gradient(to bottom, #fff, #fef2f2)",
       minHeight: "80vh"
     }}>
-      {/* Используем t.welcome вместо "Стань героем..." */}
+      
       <h1 style={{ fontSize: "3.5rem", color: "#dc2626", marginBottom: "20px" }}>
         {t.welcome}
       </h1>
       
-      {/* Используем t.description вместо "Современная платформа..." */}
+      
       <p style={{ fontSize: "1.5rem", color: "#4b5563", maxWidth: "600px", margin: "0 auto 40px" }}>
         {t.description}
       </p>
@@ -35,7 +35,7 @@ export default function LandingPage() {
             cursor: "pointer",
             fontWeight: "bold" 
           }}>
-            {t.donor} {/* Перевод для кнопки */}
+            {t.donor} 
           </button>
         </Link>
 
@@ -50,14 +50,14 @@ export default function LandingPage() {
             cursor: "pointer",
             fontWeight: "bold" 
           }}>
-            {t.hospital} {/* Перевод для кнопки */}
+            {t.hospital} 
           </button>
         </Link>
       </div>
 
       <div style={{ marginTop: "60px", color: "#9ca3af" }}>
         <p>
-          {/* Можно добавить еще ключей в LanguageContext, например t.adminQuestion */}
+          
           Admin? <Link href="/admin" style={{ color: "#dc2626" }}>{t.admin}</Link>
         </p>
       </div>
