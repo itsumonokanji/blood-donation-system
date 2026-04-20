@@ -11,7 +11,6 @@ export default function Header() {
   return (
     <header style={{ 
       padding: "15px 40px", 
-      // Вместо white используем переменную из CSS
       background: "var(--background)", 
       borderBottom: "1px solid var(--border)",
       display: "flex",
@@ -26,6 +25,25 @@ export default function Header() {
         <Link href="/donor" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.donor}</Link>
         <Link href="/hospital" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.hospital}</Link>
         <Link href="/admin" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.admin}</Link>
+
+        {/* --- НОВАЯ КНОПКА: СТАТЬ ДОНОРОМ --- */}
+        <Link 
+          href="/register" 
+          style={{ 
+            padding: "8px 16px", 
+            background: "#dc2626", 
+            color: "white", 
+            fontWeight: "bold", 
+            textDecoration: "none",
+            borderRadius: "10px",
+            fontSize: "0.9rem",
+            transition: "opacity 0.2s"
+          }}
+          onMouseOver={(e) => e.currentTarget.style.opacity = "0.8"}
+          onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
+        >
+          {lang === 'ru' ? "Стать донором" : "Become a Donor"}
+        </Link>
 
         {/* КНОПКА ТЕМЫ */}
         <button 

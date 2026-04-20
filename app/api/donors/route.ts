@@ -8,16 +8,41 @@ export async function GET() {
   return Response.json(donors);
 }
 
+
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
+    const result = await sql`
+      INSERT INTO donors (name, blood_group, location, contact, lat, lng)
+      VALUES (${body.name}, ${body.blood_group}, ${body.location}, ${body.contact}, ${body.lat || null}, ${body.lng || null})
+      RETURNING *
+    `;
+    return Response.json(result[0]);
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to create donor" }, { status: 500 });
+  }
+}
 
-  const result = await sql`
-    INSERT INTO donors (name, blood_group, location)  -- ✅ ДОБАВИЛ
-    VALUES (${body.name}, ${body.blood_group}, ${body.location})  -- ✅ ДОБАВИЛ
-    RETURNING *
-  `;
-
-  return Response.json(result[0]);
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const result = await sql`
+      UPDATE donors
+      SET name = ${body.name},
+          blood_group = ${body.blood_group},
+          location = ${body.location},
+          contact = ${body.contact},
+          lat = ${body.lat || null},
+          lng = ${body.lng || null}
+      WHERE id = ${body.id}
+      RETURNING *
+    `;
+    return Response.json(result[0]);
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Update failed" }, { status: 500 });
+  }
 }
 
 export async function DELETE(req: Request) {
@@ -30,19 +55,4 @@ export async function DELETE(req: Request) {
   `;
 
   return Response.json({ ok: true });
-}
-
-export async function PUT(req: Request) {
-  const body = await req.json();
-
-  const result = await sql`
-    UPDATE donors
-    SET name = ${body.name},
-        blood_group = ${body.blood_group},
-        location = ${body.location}  -- ✅ ДОБАВИЛ
-    WHERE id = ${body.id}
-    RETURNING *
-  `;
-
-  return Response.json(result[0]);
 }

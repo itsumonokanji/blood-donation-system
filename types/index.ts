@@ -1,9 +1,14 @@
 // types/index.ts
+
 export interface Donor {
-  id: number;
+  id?: number;
   name: string;
   blood_group: string;
-  location: string;
+  location?: string;
+  last_donation?: string;
+  // Добавляем координаты (опционально, так как не у всех они могут быть сразу)
+  lat?: number; 
+  lng?: number;
 }
 
 export interface Hospital {
@@ -11,16 +16,19 @@ export interface Hospital {
   name: string;
   location: string;
   contact: string;
+  lat?: number;
+  lng?: number;
 }
-
-// types/index.ts
-
-// types/index.ts
 
 export interface BloodRequest {
   id: number;
-  hospital: string;      
+  hospital: string;
   blood_group: string;
+  location: string;
   status: "pending" | "done" | "open" | "closed";
-  location?: string;    
+  donor_name?: string;
+  // Добавляем координаты сюда тоже
+  lat?: number;
+  lng?: number;
 }
+
