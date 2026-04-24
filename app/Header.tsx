@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/app/LanguageContext";
-import { useTheme } from "@/app/ThemeContext"; // Импортируем тему
+import { useTheme } from "@/app/ThemeContext";
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage();
-  const { theme, toggleTheme } = useTheme(); // Достаем переменные темы
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header style={{ 
@@ -26,7 +26,7 @@ export default function Header() {
         <Link href="/hospital" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.hospital}</Link>
         <Link href="/admin" style={{ textDecoration: "none", color: "var(--foreground)", fontWeight: 500 }}>{t.admin}</Link>
 
-        {/* --- НОВАЯ КНОПКА: СТАТЬ ДОНОРОМ --- */}
+        {/* --- ОБНОВЛЕННАЯ КНОПКА: ТЕПЕРЬ ПОЛНОСТЬЮ МУЛЬТИЯЗЫЧНАЯ --- */}
         <Link 
           href="/register" 
           style={{ 
@@ -42,7 +42,7 @@ export default function Header() {
           onMouseOver={(e) => e.currentTarget.style.opacity = "0.8"}
           onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
         >
-          {lang === 'ru' ? "Стать донором" : "Become a Donor"}
+          {t.btnBecomeDonor}
         </Link>
 
         {/* КНОПКА ТЕМЫ */}

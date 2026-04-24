@@ -22,7 +22,16 @@ export const translations = {
     hospSub: "Создавайте запросы на поиск доноров.",
     newRequest: "Новая заявка",
     history: "История запросов",
-    btnPost: "Опубликовать запрос"
+    btnPost: "Опубликовать запрос",
+    howItWorks: "Как работает LifeLink?",
+    step1Title: "Регистрация",
+    step1Desc: "Станьте частью сообщества доноров",
+    step2Title: "Запрос",
+    step2Desc: "Больницы публикуют заявки на кровь",
+    step3Title: "Поиск",
+    step3Desc: "Система находит подходящих доноров",
+    step4Title: "Помощь",
+    step4Desc: "Вы приходите и спасаете жизнь",
   },
   en: { 
     title: "LifeLink", 
@@ -47,7 +56,16 @@ export const translations = {
     hospSub: "Create requests to find donors.",
     newRequest: "New Request",
     history: "Request History",
-    btnPost: "Post Request"
+    btnPost: "Post Request",
+    howItWorks: "How LifeLink Works?",
+    step1Title: "Registration",
+    step1Desc: "Join our donor community",
+    step2Title: "Request",
+    step2Desc: "Hospitals post blood requests",
+    step3Title: "Matching",
+    step3Desc: "System finds suitable donors",
+    step4Title: "Help",
+    step4Desc: "You arrive and save a life",
   },
   jp: { 
     title: "ライフリンク", 
@@ -72,7 +90,16 @@ export const translations = {
     hospSub: "ドナー検索リクエストを作成します。",
     newRequest: "新規リクエスト",
     history: "リクエスト履歴",
-    btnPost: "リクエストを送信"
+    btnPost: "リクエストを送信",
+    howItWorks: "LifeLinkの仕組み",
+    step1Title: "登録",
+    step1Desc: "ドナーコミュニティに参加する",
+    step2Title: "リクエスト",
+    step2Desc: "病院が血液要請を投稿します",
+    step3Title: "マッチング",
+    step3Desc: "システムが適切なドナーを見つけます",
+    step4Title: "支援",
+    step4Desc: "献血に行き、命を救います"
   },
   kr: { 
     title: "라이프링크", 
@@ -97,6 +124,16 @@ export const translations = {
     hospSub: "기증자 찾기 요청을 생성합니다.",
     newRequest: "새 요청",
     history: "요청 기록",
-    btnPost: "요청 게시"
+    btnPost: "요청 게시",
+    howItWorks: "LifeLink 작동 방식",
+    step1Title: "등록",
+    step1Desc: "헌혈자 커뮤니티에 가입하세요",
+    step2Title: "요청",
+    step2Desc: "병원이 혈액 요청을 게시합니다",
+    step3Title: "매칭",
+    step3Desc: "시스템이 적합한 헌혈자를 찾습니다",
+    step4Title: "도움",
+    step4Desc: "방문하여 소중한 생명을 구하세요"
   },
 };
+
