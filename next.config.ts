@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Включаем режим "мне всё равно на ошибки"
+    // Пропускаем ошибки типов при сборке
     ignoreBuildErrors: true,
   },
   eslint: {
-    // И линтер тоже отключаем, чтоб не приставал
+    // Пропускаем проверку линтера
     ignoreDuringBuilds: true,
   },
 };
