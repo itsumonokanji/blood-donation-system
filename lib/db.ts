@@ -1,4 +1,4 @@
 import { neon } from "@neondatabase/serverless";
 
-const url = process.env.DATABASE_URL || "";
-export const sql = neon(url);
+const dbUrl = process.env.DATABASE_URL || "";
+export const sql = neon(dbUrl as string);
