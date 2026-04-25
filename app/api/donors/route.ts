@@ -1,13 +1,21 @@
 import { sql } from "@/lib/db";
+import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const donors = await sql`
-    SELECT * FROM donors
-    ORDER BY id DESC
-  `;
-  return Response.json(donors);
+  try {
+    const donors = await sql`
+      SELECT * FROM donors
+      ORDER BY id DESC
+    `;
+    return NextResponse.json(donors);
+  } catch (error) {
+    console.error("Database error:", error);
+    // Возвращаем пустой массив, чтобы фронтенд не сломался при ошибке базы
+    return NextResponse.json([], { status: 200 });
+  }
 }
-
 
 export async function POST(req: Request) {
   try {
@@ -17,10 +25,10 @@ export async function POST(req: Request) {
       VALUES (${body.name}, ${body.blood_group}, ${body.location}, ${body.contact}, ${body.lat || null}, ${body.lng || null})
       RETURNING *
     `;
-    return Response.json(result[0]);
+    return NextResponse.json(result[0]);
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Failed to create donor" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to create donor" }, { status: 500 });
   }
 }
 
@@ -38,21 +46,29 @@ export async function PUT(req: Request) {
       WHERE id = ${body.id}
       RETURNING *
     `;
-    return Response.json(result[0]);
+    return NextResponse.json(result[0]);
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Update failed" }, { status: 500 });
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
 
 export async function DELETE(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
-  await sql`
-    DELETE FROM donors
-    WHERE id = ${id}
-  `;
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
 
-  return Response.json({ ok: true });
+    await sql`
+      DELETE FROM donors
+      WHERE id = ${id}
+    `;
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+  }
 }
