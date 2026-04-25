@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
 
-const dbUrl = process.env.DATABASE_URL || "";
-export const sql = neon(dbUrl as string);
+// TypeScript больше не будет задавать вопросов
+const globalAny: any = process.env;
+export const sql = neon(globalAny.DATABASE_URL);
