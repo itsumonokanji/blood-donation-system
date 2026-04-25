@@ -1,10 +1,8 @@
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next"; // Добавили Viewport
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./LanguageContext"; 
-import { ThemeProvider } from "./ThemeContext"; // Добавили импорт
+import { ThemeProvider } from "./ThemeContext"; 
 import Header from "./Header";
 
 const geistSans = Geist({
@@ -16,6 +14,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// ПРАВИЛЬНЫЙ способ задать viewport в Next.js
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "LifeLink — Система донорства",
@@ -30,20 +34,15 @@ export default function RootLayout({
   return (
     <html lang="ru" className="h-full">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-full flex flex-col antialiased`}>
-        {/* Оборачиваем всё приложение в ThemeProvider */}
         <ThemeProvider>
           <LanguageProvider>
-            
             <Header />
-
             <main style={{ flex: 1 }}>
               {children}
             </main>
-
             <footer style={{ textAlign: "center", padding: "20px", color: "#9ca3af", borderTop: "1px solid var(--border-color)" }}>
               © 2026 LifeLink. Сделано с заботой.
             </footer>
-
           </LanguageProvider>
         </ThemeProvider>
       </body>
